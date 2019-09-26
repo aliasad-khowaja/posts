@@ -59,4 +59,16 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+
+    @PutMapping(path = "/users/{id}")
+    public ResponseEntity<User> update(@PathVariable Long id, @Valid @RequestBody User updatingUser) {
+        User user = userService.get(id);
+        if( user == null ) {
+            throw new UserNotFoundException(messageSource.getMessage("user.error.not.found",
+                    new Object[]{id}, LocaleContextHolder.getLocale()));
+        }
+        updatingUser.setId(id);
+        return ResponseEntity.ok( userService.save(updatingUser) );
+    }
+
 }
